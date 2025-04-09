@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diccionario Informático</title>
+    <link rel="stylesheet" href="principal.css">
+</head>
+<body>
+    <div class="portada">
+        <img src="imagenes/maxresdefault.jpg" alt="Portada Diccionario Informático">
+        <h1>Diccionario de Términos Informáticos</h1>
+        <input type="text" id="filtro" onkeyup="filtrarPalabras()" placeholder="Buscar palabra...">
+    </div>
+    
+    <div class="container">
+        <h1>Diccionario Tecnológico</h1>
+        <div class="filter-buttons">
+            <button onclick="filterDictionary('all')">Todos</button>
+            <script>
+                for (let i = 65; i <= 90; i++) {
+                    document.write(`<button onclick="filterDictionary('${String.fromCharCode(i)}')">${String.fromCharCode(i)}</button>`);
+                }
+            </script>
+        </div>
+
+        <ul id="dictionary"></ul>
+    </div>
+
+    <script>
+        const terms = [
+        { term: "ASCII", definition: "Código estándar para representar texto en computadoras."},
+            { term: "Acceso directo", definition: "Enlace que apunta a un archivo o programa." },
+            { term: "Alfanumérico", definition: "Conjunto de letras y números." },
+            { term: "Algoritmo", definition: "Conjunto de instrucciones para resolver un problema." },
+            { term: "Ancho de banda", definition: "Cantidad de datos que se pueden transmitir por segundo." },
+            { term: "Antivirus", definition: "Programa que detecta y elimina virus informáticos." },
+            { term: "ARPANet", definition: "Red precursora de Internet." },
+            { term: "AutoCad", definition: "Software de diseño asistido por computadora." },
+            { term: "Back door", definition: "Entrada oculta a un sistema informático." },
+            { term: "Backup", definition: "Copia de seguridad de información." },
+            { term: "Banner", definition: "Imagen publicitaria en una página web." },
+            { term: "Base de datos", definition: "Conjunto organizado de información." },
+            { term: "Binario", definition: "Sistema de numeración con dos dígitos (0 y 1)." },
+            { term: "BIOS", definition: "Sistema básico de entrada/salida de un computador." },
+            { term: "Bit", definition: "Unidad mínima de información digital." },
+            { term: "Byte", definition: "Conjunto de 8 bits." },
+            { term: "Browser", definition: "Navegador web." },
+            { term: "Boot", definition: "Proceso de inicio del sistema operativo." },
+            { term: "Buffer", definition: "Memoria temporal de almacenamiento." },
+            { term: "Bug", definition: "Error en un programa." },
+            { term: "Chat", definition: "Conversación en línea en tiempo real." },
+            { term: "Cracker", definition: "Persona que rompe sistemas de seguridad informática." },
+            { term: "Chip", definition: "Circuito integrado pequeño." },
+            { term: "Compilador", definition: "Programa que traduce código fuente a código máquina." },
+            { term: "Comprimir", definition: "Reducir el tamaño de un archivo." },
+            { term: "Cookie", definition: "Dato que una web guarda en el navegador del usuario." },
+            { term: "CPU", definition: "Unidad central de procesamiento." },
+            { term: "Cursor", definition: "Indicador visual en la pantalla." },
+            { term: "Default", definition: "Configuración predeterminada." },
+            { term: "DNS", definition: "Sistema de nombres de dominio." },
+            { term: "Diodo", definition: "Componente electrónico que permite el paso de corriente en una dirección." },
+            { term: "Digitalizar", definition: "Convertir información analógica a digital." },
+            { term: "Directorio", definition: "Carpeta donde se almacenan archivos." },
+            { term: "Download", definition: "Descargar archivos desde internet." },
+            { term: "DVD", definition: "Disco de almacenamiento digital." },
+            { term: "E-mail", definition: "Correo electrónico." },
+            { term: "Emulación", definition: "Imitación del comportamiento de un sistema por otro." },
+            { term: "Encriptar", definition: "Convertir información en código para protegerla." },
+            { term: "Enter", definition: "Tecla para confirmar o ejecutar comandos." },
+            { term: "Fatal error", definition: "Error crítico que detiene el sistema." },
+            { term: "FAQ", definition: "Preguntas frecuentes." },
+            { term: "Fibra óptica", definition: "Medio de transmisión de datos a alta velocidad." },
+            { term: "File", definition: "Archivo." },
+            { term: "Firewall", definition: "Sistema de seguridad que controla el acceso a una red." },
+            { term: "Flag", definition: "Indicador de estado." },
+            { term: "Gateway", definition: "Puerta de enlace entre redes." },
+            { term: "Gigabyte", definition: "Unidad de almacenamiento equivalente a 1024 megabytes." },
+            { term: "Hacker", definition: "Persona experta en sistemas informáticos." },
+            { term: "Hardware", definition: "Componentes físicos del computador." },
+            { term: "HTML", definition: "Lenguaje de marcado para crear páginas web." },
+            { term: "Hub", definition: "Dispositivo que conecta varios equipos en red." },
+            { term: "Icono", definition: "Imagen representativa de una función o programa." },
+            { term: "Inteligencia artificial", definition: "Simulación de procesos humanos por máquinas." },
+            { term: "Interface", definition: "Interfaz o medio de interacción entre usuario y sistema." },
+            { term: "Internet", definition: "Red mundial de computadoras." },
+            { term: "Intranet", definition: "Red privada interna de una organización." },
+            { term: "Label", definition: "Etiqueta." },
+            { term: "LAN", definition: "Red de área local." },
+            { term: "Laptop", definition: "Computadora portátil." },
+            { term: "Linux", definition: "Sistema operativo libre." },
+            { term: "Macintosh", definition: "Línea de computadoras de Apple." },
+            { term: "Mainframe", definition: "Computadora de gran capacidad de procesamiento." },
+            { term: "Megabyte", definition: "Unidad de almacenamiento (1024 kilobytes)." },
+            { term: "Memoria cache", definition: "Memoria rápida para mejorar el acceso a datos." },
+            { term: "Microprocesador", definition: "Chip que realiza los procesos del computador." },
+            { term: "Módem", definition: "Dispositivo que convierte señales digitales y analógicas." },
+            { term: "Mouse", definition: "Dispositivo apuntador." },
+            { term: "MP3", definition: "Formato de compresión de audio." },
+            { term: "Nanosegundo", definition: "Milmillonésima parte de un segundo." },
+            { term: "Navegador", definition: "Programa para acceder a páginas web." },
+            { term: "Nodo", definition: "Punto de conexión dentro de una red." },
+            { term: "POP3", definition: "Protocolo de correo electrónico." },
+            { term: "Procesador", definition: "Unidad que ejecuta instrucciones en la computadora." },
+            { term: "Programa", definition: "Conjunto de instrucciones para realizar tareas." },
+            { term: "Protocolo", definition: "Reglas para la comunicación entre sistemas." },
+            { term: "Puerto paralelo", definition: "Conector usado para impresoras." },
+            { term: "Puerto serial", definition: "Conector para transmisión de datos." },
+            { term: "RAM", definition: "Memoria de acceso aleatorio." },
+            { term: "Realidad virtual", definition: "Entorno simulado por computadora." },
+            { term: "Red", definition: "Conjunto de computadoras interconectadas." },
+            { term: "ROM", definition: "Memoria de solo lectura." },
+            { term: "Router", definition: "Enrutador de datos entre redes." },
+            { term: "Servidor", definition: "Computadora que proporciona servicios a otras." },
+            { term: "Sistema operativo", definition: "Software que gestiona los recursos del sistema." },
+            { term: "Software", definition: "Conjunto de programas y aplicaciones." },
+            { term: "TCP/IP", definition: "Protocolo de internet." },
+            { term: "Terminal", definition: "Punto de acceso al sistema." },
+            { term: "Unix", definition: "Sistema operativo multitarea." },
+            { term: "USB", definition: "Estándar de conexión universal." },
+            { term: "Videoconferencia", definition: "Comunicación con video y audio en tiempo real." },
+            { term: "Virus", definition: "Programa malicioso que altera el funcionamiento del sistema." },
+            { term: "Windows", definition: "Sistema operativo de Microsoft." },
+            { term: "WinZip", definition: "Programa para comprimir archivos." },
+            { term: "Wireless", definition: "Comunicación sin cables." },
+            { term: "Zip", definition: "Formato de compresión de archivos." }
+        ];
+
+        function displayTerms(filteredTerms) {
+            const dictionary = document.getElementById("dictionary");
+            dictionary.innerHTML = "";
+            filteredTerms.forEach(({ term, definition }) => {
+                const wikiLink = `https://es.wikipedia.org/wiki/${encodeURIComponent(term)}`;
+                dictionary.innerHTML += `
+                    <li>
+                        <strong>${term}:</strong> ${definition}
+                        <a href="${wikiLink}" target="_blank" class="def-link">[Más info]</a>
+                    </li>`;
+            });
+        }
+
+        function filtrarPalabras() {
+            const filtro = document.getElementById('filtro').value.toLowerCase();
+            const filteredTerms = terms.filter(({ term }) => term.toLowerCase().includes(filtro));
+            displayTerms(filteredTerms);
+        }
+
+        function filterDictionary(letter) {
+            if (letter === 'all') {
+                displayTerms(terms);
+            } else {
+                const filteredTerms = terms.filter(({ term }) => term.toUpperCase().startsWith(letter));
+                displayTerms(filteredTerms);
+            }
+        }
+
+        window.onload = function() {
+            displayTerms(terms);
+        };
+    </script>
+</body>
+</html>
+
